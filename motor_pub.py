@@ -33,7 +33,8 @@ def callback(data):
     front_data.data = data.data[0]
     back_data.data = data.data[1]
 
-grad_lst = [-21.65, -46.96, -59.76, -81.5]
+#grad_lst = [-21.65, -46.96, -59.76, -81.5]
+grad_lst = [-21.65, -46.96, -81.5]
 
 def front_data():
     global front_offset, mode, cnt
@@ -60,10 +61,11 @@ if __name__ == "__main__":
     init_node()
     front_data.tmv = time.time()
     back_data.tmv = time.time()
-    speedlst = [115, 124, 134, 200]
+    speedlst = [115, 125, 200]
 ###    speedlst = [124, 124, 124, 127]
 #    rangelst = [50, 88, 119, 130]
-    rangelst = [41.5, 60, 95, 107]
+    rangelst = [41.5, 62, 110]
+    rangelst = [40, 57, 81]
 ###    rangelst = [61, 61, 61, 61]
     cnt = 0
     cur_speed = 90
@@ -83,14 +85,15 @@ if __name__ == "__main__":
                 tar_speed = speedlst[cnt]-7
             if (front_data.data < rangelst[cnt]-6):
                 mode = 2
+                cur_speed = 60
                 tar_speed = 90
         elif mode == 2:
-            if (front_data() < 35):
-                cur_speed = 90
-            if cur_speed <= 90:
-                tar_speed = 90
+            #if (front_data() <= 35):
+            #    cur_speed = 90
+            if cur_speed == 90:
+                #tar_speed = 90
                 mode = 3
-                time.sleep(1)
+                time.sleep(2)
         elif mode == 3:
             for i in range(10):
                 drive(90,90+i*1.5)
@@ -107,25 +110,26 @@ if __name__ == "__main__":
             mode = 4
             tar_speed = 70
         elif mode == 4:
-            if(44<back_data()<46):
+            if(44.5<back_data()<46.5):
                 tar_speed = 73
-            if(40<back_data.data<43):
+            if(40.5<back_data.data<43.5):
                 tar_speed = 75
-            if (back_data.data<39):
+            if (back_data.data<39.5):
                 mode = 5
+                cur_speed = 90
                 tar_speed = 90
         elif mode == 5:
             if cur_speed == 90:
                 mode = 0
                 time.sleep(5)
-                cnt=(cnt+1)%4
-                if(cnt>=4):
+                cnt=cnt+1
+                if(cnt>=3):
                     break
 
 
         drive(90,cur_speed)
         if(cur_speed != tar_speed):
-            cur_speed = cur_speed - 0.5*(cur_speed-tar_speed)-1.2*abs(cur_speed-tar_speed)/(cur_speed-tar_speed)
+            cur_speed = cur_speed - 0.5*(cur_speed-tar_speed)-5*abs(cur_speed-tar_speed)/(cur_speed-tar_speed)
         if(abs(cur_speed-tar_speed)<2.7):
             cur_speed = tar_speed
         '''
